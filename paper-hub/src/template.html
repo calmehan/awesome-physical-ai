@@ -601,7 +601,7 @@ function renderFramework(){
     groups.forEach(g=>{
       const items=(state.dedupe?(claim[g.id]||[]):pool.filter(p=>groupMatch(p,g.filter||{}))).slice();
       if(!items.length) return;
-      items.sort((a,b)=>String(b.date||b.year||'').localeCompare(String(a.date||a.year||'')));
+      items.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
       const gd=el('div','grp'); gd.id='grp-'+slugId(view.id)+'-'+slugId(g.id);
       gd.innerHTML=`<div class="grphead"><h3 id="${gd.id}-name">${esc(g.name)}</h3>`+
         `<span class="sub" id="${gd.id}-sub">${esc(g.sub||'')}</span><span class="n">${items.length}</span></div>`;
@@ -621,7 +621,7 @@ function renderFramework(){
 /* ---------- table view ---------- */
 const COLDEF=[
   {k:'title',label:'Paper',get:p=>`<span>${hl(p.title)}</span><span class="s">${esc((p.authors||[])[0]||'')}${(p.n_authors||1)>1?' et al.':''}${(p.institutions||[]).length?' · '+esc(p.institutions.join(', ')):''}</span>`,cls:'ttl',sort:p=>p.title},
-  {k:'date',label:'Date',get:p=>esc(p.date||p.year||''),cls:'num',sort:p=>String(p.date||p.year||'')},
+  {k:'date',label:'Date',get:p=>esc(p.date||''),cls:'num',sort:p=>p.date||''},
   {k:'venue',label:'Venue',get:p=>esc(p.venue||''),sort:p=>p.venue||''},
   {k:'tldr',label:'One line',get:p=>hl(p.tldr||''),sort:p=>p.tldr||''},
   {k:'contribution',label:'Contribution'},{k:'arc',label:'Arc'},{k:'closes_loop',label:'Loop'},
@@ -787,7 +787,7 @@ function renderPanel(p){
   let h=`
    <h1>${esc(p.title)}</h1>
    <div class="byline">${esc(authors)}</div>
-   <div class="venue">${esc(p.venue||'')}${(p.date||p.year)?' · '+esc(p.date||p.year):''}${(p.institutions||[]).length?' · '+esc(p.institutions.join(' · ')):''}</div>
+   <div class="venue">${esc(p.venue||'')}${p.date?' · '+esc(p.date):''}${(p.institutions||[]).length?' · '+esc(p.institutions.join(' · ')):''}</div>
    <div class="links">${links}</div>
    <div class="tldr">${esc(p.tldr||'')}</div>
    ${p.why?`<div class="why"><b>Why it is on this list.</b> ${esc(p.why)}</div>`:''}
